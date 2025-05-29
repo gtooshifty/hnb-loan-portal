@@ -1,5 +1,31 @@
 <template>
-    <lightning-card title="Loan Applications">
-        <p class="slds-p-horizontal_small">List of loan applications will appear here.</p>
-    </lightning-card>
+  <lightning-card title="Loan Applications" icon-name="standard:case">
+    <div class="slds-m-around_medium">
+      <lightning-combobox
+        name="statusFilter"
+        label="Filter by Status"
+        value={statusFilter}
+        options={statusOptions}
+        onchange={handleStatusChange}
+      >
+      </lightning-combobox>
+
+      <lightning-combobox
+        name="officerFilter"
+        label="Filter by Loan Officer"
+        value={officerFilter}
+        options={officerOptions}
+        onchange={handleOfficerChange}
+      >
+      </lightning-combobox>
+    </div>
+
+    <lightning-datatable
+      key-field="Id"
+      data={filteredApplications}
+      columns={columns}
+      hide-checkbox-column
+    >
+    </lightning-datatable>
+  </lightning-card>
 </template>
