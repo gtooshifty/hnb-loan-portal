@@ -1,0 +1,19 @@
+<template>
+  <lightning-card title="Recent Loan Activity" icon-name="standard:task">
+    <template if:true={activities}>
+      <ul class="slds-list_vertical slds-p-around_medium">
+        <template for:each={activities} for:item="activity">
+          <li key={activity.Id} class="slds-item slds-m-bottom_small">
+            <strong>{activity.Name}</strong> — Status: {activity.Status__c}
+            <br />
+            Applicant: {activity.Applicant_Name__c} <br />
+            Updated: {activity.LastModifiedDate}
+          </li>
+        </template>
+      </ul>
+    </template>
+    <template if:true={error}>
+      <p class="slds-text-color_error slds-p-around_medium">{error}</p>
+    </template>
+  </lightning-card>
+</template>

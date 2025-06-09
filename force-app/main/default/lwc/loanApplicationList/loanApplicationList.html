@@ -1,5 +1,5 @@
 <template>
-  <lightning-card title="Loan Applications" icon-name="standard:case">
+  <lightning-card title="Loan Applications" icon-name="standard:task">
     <div class="slds-m-around_medium">
       <lightning-combobox
         name="statusFilter"
@@ -25,6 +25,7 @@
       data={filteredApplications}
       columns={columns}
       hide-checkbox-column
+      empty-state-message="No loan applications found with current filters."
     >
     </lightning-datatable>
   </lightning-card>

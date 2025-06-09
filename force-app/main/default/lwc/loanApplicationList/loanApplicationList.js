@@ -2,11 +2,11 @@ import { LightningElement, wire, track } from "lwc";
 import getLoanApplications from "@salesforce/apex/LoanApplicationController.getLoanApplications";
 
 const COLUMNS = [
+  { label: "Applicant Name", fieldName: "ApplicantName" },
   { label: "Name", fieldName: "Name" },
   { label: "Amount", fieldName: "Loan_Amount__c", type: "currency" },
-  { label: "Status", fieldName: "Loan_Status__c" },
-  { label: "Customer", fieldName: "Customer__rName" },
-  { label: "Loan Officer", fieldName: "Loan_Officer__rName" }
+  { label: "Status", fieldName: "Status__c" },
+  { label: "Application Date", fieldName: "ApplicationDate", type: "date" }
 ];
 
 export default class LoanApplicationList extends LightningElement {
@@ -26,7 +26,7 @@ export default class LoanApplicationList extends LightningElement {
 
   officerOptions = [
     { label: "All", value: "" }
-    // We'll populate this dynamically once data loads
+    // dynamically populated later
   ];
 
   @wire(getLoanApplications)
@@ -34,16 +34,16 @@ export default class LoanApplicationList extends LightningElement {
     if (data) {
       this.applications = data.map((app) => ({
         ...app,
-        Customer__rName: app.Customer__r?.Name,
-        Loan_Officer__rName: app.Loan_Officer__r?.Name
+        CustomerName: app.Customer__r?.Name || "",
+        LoanOfficerName: app.Loan_Officer__r?.Name || "",
+        ApplicantName: app.Applicant_Name__c || "",
+        ApplicationDate: app.Application_Date__c || null
       }));
 
       // Populate officer options dynamically based on data
       const officers = [
         ...new Set(
-          this.applications
-            .map((app) => app.Loan_Officer__rName)
-            .filter(Boolean)
+          this.applications.map((app) => app.LoanOfficerName).filter(Boolean)
         )
       ];
       this.officerOptions = [
@@ -70,10 +70,9 @@ export default class LoanApplicationList extends LightningElement {
   applyFilters() {
     this.filteredApplications = this.applications.filter((app) => {
       return (
-        (this.statusFilter === "" ||
-          app.Loan_Status__c === this.statusFilter) &&
+        (this.statusFilter === "" || app.Status__c === this.statusFilter) &&
         (this.officerFilter === "" ||
-          app.Loan_Officer__rName === this.officerFilter)
+          app.LoanOfficerName === this.officerFilter)
       );
     });
   }
